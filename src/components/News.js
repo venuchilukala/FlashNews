@@ -15,14 +15,12 @@ const News = (props) =>{
   };
   
   const updateNews = async () => {
-    // if (props.setProgress) props.setProgress(0);
     props.setProgress(0);
     const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`;
     
     setLoading(true)
     try {
       let response = await fetch(url);
-      // if (props.setProgress) props.setProgress(30);
       props.setProgress(30);
       let data = await response.json();
       if (props.setProgress) props.setProgress(70);
@@ -30,7 +28,6 @@ const News = (props) =>{
       setTotalResults(data.totalResults)
       setLoading(false)
 
-      // if (props.setProgress) props.setProgress(100);
       props.setProgress(100);
     } catch (error) {
       console.error("Error fetching news:", error);
@@ -39,13 +36,14 @@ const News = (props) =>{
   }
 
   useEffect(()=>{
+    document.title = `Flash News - ${capitalize(props.category)} `
     updateNews();
     
   })
 
   const fetchData = async () => {
-        setPage(page + 1)
-        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`;
+    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page+1}&pageSize=${props.pageSize}`;
+    setPage(page + 1)
         try {
           let response = await fetch(url);
           let data = await response.json();
@@ -57,7 +55,7 @@ const News = (props) =>{
   };
   return (
     <div>
-      <h1 className="text-center">News Feed on {capitalize(props.category)}</h1>
+      <h1 className="text-center" style={{marginTop:"90px"}}>News Feed on {capitalize(props.category)}</h1>
       {loading && <Spinner />}
       <InfiniteScroll
         dataLength={articles.length} // Important field to render the next data
